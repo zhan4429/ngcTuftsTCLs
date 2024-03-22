@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+if [ ! $(command -v singularity) ]; then
+        module load singularity
+fi
+
+VER=4.2.1-1
+PKG=parabricks
+PROGRAM=pbrun
+DIRECTORY=/cluster/tufts/biocontainers/images
+IMAGE=nvcr.io_nvidia_clara_clara-parabricks:4.2.1-1.sif
+ENTRYPOINT_ARGS=""
+
+## Determine Nvidia GPUs (to pass coresponding flag to Singularity)
+if [[ $(nvidia-smi -L 2>/dev/null) ]]
+then
+        OPTIONS="--nv"
+fi
+	
+singularity run $OPTIONS $DIRECTORY/$IMAGE $ENTRYPOINT_ARGS $PROGRAM "$@"
